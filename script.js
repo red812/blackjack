@@ -1,7 +1,7 @@
 let score = 0;
 let cards = [];
 let hasBlackJack = false;
-let isAlive = true;
+let isAlive = false;
 let message = "";
 let cardsEl = document.getElementById("cardsEl");
 let welcomeEl = document.getElementById("welcomeEl");
@@ -20,12 +20,21 @@ function dealtwoCards() {
 }
 
 function startGame() {
+    isAlive = true;
+    hasBlackJack = false;
     dealtwoCards();
     renderGame();
 }
 
 function getRandomCard() {
-    return Math.floor(Math.random()*12) + 1;
+    let randomNumber = Math.floor(Math.random()*12) + 1;
+    if(randomNumber >10) {
+        return 10;
+    } else if(randomNumber ===1) {
+        return 11;
+    } else {
+        return randomNumber;
+    }
 }
 
 function renderGame() {
@@ -38,7 +47,7 @@ function renderGame() {
     }
 
     scoreEl.textContent = "Score:" + score;
-    if(score<20) {
+    if(score<=20) {
         message = "Do you want to draw a new card?";
     } else if (score === 21) {
         message = "You've got BlackJack";
@@ -53,10 +62,12 @@ function renderGame() {
 }
 
 function newCard() {
-    let card = getRandomCard();
-    score += card;
-    cards.push(card);
-    renderGame();
+    if(isAlive && !hasBlackJack) {
+        let card = getRandomCard();
+        score += card;
+        cards.push(card);
+        renderGame();
+    }
 }
 
 // ToDo
